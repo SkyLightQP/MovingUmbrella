@@ -10,8 +10,8 @@
 
 int vib_pins[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 int servo_pins[] = { 10, 11 };
-int bt_tx = 12;
-int bt_rx = 13;
+int bt_tx = 13;
+int bt_rx = 12;
 Servo servos[SERVO_SIZE];
 SoftwareSerial bt_serial(bt_tx, bt_rx);
 
