@@ -57,11 +57,11 @@ long get_vib(int n) {
 
 void move_servo(int n, int angle) {
   if (n == 1) {
-    if (n < MIN_MOTOR) {
+    if (angle <= MIN_MOTOR) {
       servos[n].write(MIN_MOTOR);
       return;
     }
-    if (n >= MAX_MOTOR) {
+    if (angle >= MAX_MOTOR) {
       servos[n].write(MAX_MOTOR);
       return;
     }
