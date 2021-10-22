@@ -4,6 +4,10 @@
 #define VIB_SIZE 8
 #define SERVO_SIZE 2
 
+#define MAX_MOTOR 60
+#define MIN_MOTOR 0
+#define DEFAULT_MOTOR 26
+
 int vib_pins[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 int servo_pins[] = { 10, 11 };
 int bt_tx = 12;
@@ -12,26 +16,16 @@ Servo servos[SERVO_SIZE];
 SoftwareSerial bt_serial(bt_tx, bt_rx);
 
 void setup() {
-  for (int i = 0; i < VIB_SIZE; i++) {
-    pinMode(vib_pins[i], INPUT);
-  }
+  init_sensors();
 
-  for (int i = 0; i < SERVO_SIZE; i++) {
-    servos[i].attach(servo_pins[i]);
-  }
-  
   Serial.begin(9600);
   bt_serial.begin(9600);
+  
+  move_servo(0, 180);
+  move_servo(1, DEFAULT_MOTOR);
 }
 
 void loop() {
-  if (bt_serial.available()) {
-    Serial.write(bt_serial.read());
-  }
-  if (Serial.available()) {
-    bt_serial.write(Serial.read());
-  }
-
   Serial.println();
   long a = (get_vib(0) + get_vib(1)) / 2;
   long b = (get_vib(2) + get_vib(3)) / 2;
@@ -42,6 +36,17 @@ void loop() {
   Serial.println(b);
   Serial.println(c);
   Serial.println(d);
+
+}
+
+void init_sensors() {
+  for (int i = 0; i < VIB_SIZE; i++) {
+    pinMode(vib_pins[i], INPUT);
+  }
+
+  for (int i = 0; i < SERVO_SIZE; i++) {
+    servos[i].attach(servo_pins[i]);
+  }
 }
 
 long get_vib(int n) {
@@ -51,5 +56,15 @@ long get_vib(int n) {
 }
 
 void move_servo(int n, int angle) {
+  if (n == 1) {
+    if (n < MIN_MOTOR) {
+      servos[n].write(MIN_MOTOR);
+      return;
+    }
+    if (n >= MAX_MOTOR) {
+      servos[n].write(MAX_MOTOR);
+      return;
+    }
+  }
   servos[n].write(angle);
 }
