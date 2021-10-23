@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.MovingUmbrella" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.MovingUmbrella" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#fafafa</item>
         <item name="colorPrimaryVariant">#c7c7c7</item>
         <item name="colorOnPrimary">@color/white</item>
