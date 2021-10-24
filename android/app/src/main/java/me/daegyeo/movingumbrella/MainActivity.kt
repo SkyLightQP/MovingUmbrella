@@ -6,24 +6,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.ActivityCompat
 import net.daum.mf.map.api.MapView
 
 
 class MainActivity : AppCompatActivity() {
-    private val PERMISSIONS_REQUEST_READ_LOCATION = 0x00000001
-    private val PERMISSIONS = arrayOf(
+    private val PERMISSION_LIST = arrayOf(
         Manifest.permission.INTERNET,
         Manifest.permission.ACCESS_COARSE_LOCATION,
-        Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.BLUETOOTH_ADMIN,
+        Manifest.permission.BLUETOOTH
     )
+    private val permission = Permission(this, PERMISSION_LIST)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSIONS_REQUEST_READ_LOCATION);
+
         registerToolbar()
         registerKakaoMap()
+
+        permission.checkPermission()
     }
 
     private fun registerToolbar() {
