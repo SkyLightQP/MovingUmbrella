@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
 
         registerToolbar()
         mapView = findViewById(R.id.map)
-
     }
 
     private fun registerToolbar() {
