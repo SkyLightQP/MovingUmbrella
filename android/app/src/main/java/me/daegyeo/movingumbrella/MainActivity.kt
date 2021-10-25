@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMapView: MapView
 
     companion object {
-        lateinit var mapData: MapData
+        var mapData: MapData = MapData(null, Pair(0.0, 0.0))
     }
 
     private val fineLocation = Permission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun tracking() {
-        mapData.naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        mapData.naverMap?.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onMapReady(naverMap: NaverMap) {
