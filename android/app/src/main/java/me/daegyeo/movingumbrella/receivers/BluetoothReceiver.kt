@@ -7,10 +7,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.util.MarkerIcons
 import me.daegyeo.movingumbrella.Constants
 import me.daegyeo.movingumbrella.MainActivity
+import me.daegyeo.movingumbrella.MarkerManager
 
 
 class BluetoothReceiver : BroadcastReceiver() {
@@ -24,19 +23,17 @@ class BluetoothReceiver : BroadcastReceiver() {
             Constants.PACKAGE,
             AppCompatActivity.MODE_PRIVATE
         )
+        val marker = MarkerManager(mapData.naverMap!!)
 
         if (name == DEVICE_NAME) {
-            // TODO: 모든 마커를 지운다.
-                
-            Marker().apply {
-                position = LatLng(
+            marker.clear()
+
+            marker.add(
+                LatLng(
                     mapData.lastLocation.first,
                     mapData.lastLocation.second
                 )
-                captionText = "최근 우산 위치"
-                icon = MarkerIcons.YELLOW
-                map = mapData.naverMap
-            }
+            )
 
             shardPreferences.edit {
                 putString(

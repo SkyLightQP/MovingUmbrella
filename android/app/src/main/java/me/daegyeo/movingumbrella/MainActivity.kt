@@ -16,9 +16,7 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import com.naver.maps.map.util.MarkerIcons
 import me.daegyeo.movingumbrella.data.MapData
 import me.daegyeo.movingumbrella.runtimePermission.Permission
 import java.io.IOException
@@ -103,6 +101,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (fineLocation.isGrant() && coarseLocation.isGrant()) startTracking()
 
         naverMap.addOnLocationChangeListener {
+            val marker = MarkerManager(naverMap)
             mapData.lastLocation = Pair(it.latitude, it.longitude)
 
             val saveLocation = shardPreferences.getString(Constants.LOCATION_KEY, null)
@@ -110,12 +109,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 val token = saveLocation.split(':')
                 val lat = token[0].toDouble()
                 val lon = token[1].toDouble()
-                Marker().apply {
-                    position = LatLng(lat, lon)
-                    captionText = "최근 우산 위치"
-                    icon = MarkerIcons.YELLOW
-                    map = mapData.naverMap
-                }
+                marker.add(LatLng(lat, lon))
             }
         }
     }
