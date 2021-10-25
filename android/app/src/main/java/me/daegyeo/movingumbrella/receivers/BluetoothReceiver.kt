@@ -1,4 +1,4 @@
-package me.daegyeo.movingumbrella
+package me.daegyeo.movingumbrella.receivers
 
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -7,6 +7,7 @@ import android.content.Intent
 import android.widget.Toast
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
+import me.daegyeo.movingumbrella.MainActivity
 
 
 class BluetoothReceiver : BroadcastReceiver() {

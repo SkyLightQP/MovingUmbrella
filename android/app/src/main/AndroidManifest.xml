@@ -28,7 +28,7 @@
         </activity>
 
         <receiver
-            android:name="me.daegyeo.movingumbrella.BluetoothReceiver"
+            android:name="me.daegyeo.movingumbrella.receivers.BluetoothReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
