@@ -2,6 +2,7 @@ package me.daegyeo.movingumbrella
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -21,10 +22,6 @@ import java.io.IOException
 import java.util.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    private val TAG = "MovingUmbrella"
-    private val ACCESS_LOCATION_CODE = 1000
-    private val BLUETOOTH_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb")
-
     private lateinit var locationSource: FusedLocationSource
     private lateinit var mMapView: MapView
     private lateinit var bluetoothAdapter: BluetoothAdapter
@@ -44,7 +41,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         setSupportActionBar(toolbar)
 
         mMapView = findViewById(R.id.map)
-        locationSource = FusedLocationSource(this, ACCESS_LOCATION_CODE)
+        locationSource = FusedLocationSource(this, Constants.ACCESS_LOCATION_CODE)
         mMapView.getMapAsync(this)
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
@@ -56,7 +53,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ),
-                ACCESS_LOCATION_CODE
+                Constants.ACCESS_LOCATION_CODE
             )
         }
 
@@ -82,10 +79,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun connectBluetoothDevice(deviceName: String) {
         try {
             val device = bluetoothAdapter.bondedDevices.filter { it.name == deviceName }
-            val socket = device[0].createRfcommSocketToServiceRecord(BLUETOOTH_UUID)
+            val socket = device[0].createRfcommSocketToServiceRecord(Constants.BLUETOOTH_UUID)
             socket.connect()
         } catch (ex: IOException) {
-            Log.e(TAG, ex.stackTraceToString())
+            Log.e(Constants.TAG, ex.stackTraceToString())
             Toast.makeText(this, "${deviceName}에 연결을 할 수 없습니다.\n다시 시도해주세요.", Toast.LENGTH_SHORT).show()
         }
     }
@@ -111,7 +108,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            ACCESS_LOCATION_CODE -> {
+            Constants.ACCESS_LOCATION_CODE -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startTracking()
                 }
