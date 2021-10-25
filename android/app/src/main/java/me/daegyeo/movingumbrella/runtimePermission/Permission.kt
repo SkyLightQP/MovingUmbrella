@@ -13,7 +13,7 @@ class Permission(val context: Context, val permission: String){
         }
     }
 
-    fun checkPermission(): Boolean {
+    fun isGrant(): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             permission
