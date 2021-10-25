@@ -4,13 +4,10 @@ import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.OverlayImage
 import com.naver.maps.map.util.MarkerIcons
 import me.daegyeo.movingumbrella.MainActivity
-import me.daegyeo.movingumbrella.R
 
 
 class BluetoothReceiver : BroadcastReceiver() {
