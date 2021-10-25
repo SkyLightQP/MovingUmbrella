@@ -38,8 +38,8 @@
         </receiver>
 
         <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="fc2fcdb3cc9d872edcdc41239930c9e4" />
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="wdc32xirsl" />
     </application>
 
 </manifest>
