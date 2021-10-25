@@ -90,14 +90,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun tracking() {
+    private fun startTracking() {
         mapData.naverMap?.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onMapReady(naverMap: NaverMap) {
         mapData.naverMap = naverMap
         naverMap.locationSource = locationSource
-        if (fineLocation.isGrant() && coarseLocation.isGrant()) tracking()
+        if (fineLocation.isGrant() && coarseLocation.isGrant()) startTracking()
 
         naverMap.addOnLocationChangeListener {
             mapData.lastLocation = Pair(it.latitude, it.longitude)
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         when (requestCode) {
             ACCESS_LOCATION_CODE -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    tracking()
+                    startTracking()
                 }
             }
         }
