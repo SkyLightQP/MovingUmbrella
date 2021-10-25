@@ -11,6 +11,7 @@ import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.util.FusedLocationSource
+import me.daegyeo.movingumbrella.data.MapData
 import me.daegyeo.movingumbrella.runtimePermission.Permission
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -19,8 +20,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMapView: MapView
 
     companion object {
-        var lastLocation: Pair<Double, Double> = Pair(0.0, 0.0)
-        lateinit var mNaverMap: NaverMap
+        lateinit var mapData: MapData
     }
 
     private val fineLocation = Permission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -51,16 +51,16 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun tracking() {
-        mNaverMap.locationTrackingMode = LocationTrackingMode.Follow
+        mapData.naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onMapReady(naverMap: NaverMap) {
-        mNaverMap = naverMap
+        mapData.naverMap = naverMap
         naverMap.locationSource = locationSource
         if (fineLocation.isGrant() && coarseLocation.isGrant()) tracking()
 
         naverMap.addOnLocationChangeListener {
-            lastLocation = Pair(it.latitude, it.longitude)
+            mapData.lastLocation = Pair(it.latitude, it.longitude)
         }
     }
 
