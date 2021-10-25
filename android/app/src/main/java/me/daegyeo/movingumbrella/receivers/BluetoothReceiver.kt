@@ -14,7 +14,7 @@ import me.daegyeo.movingumbrella.MarkerManager
 
 class BluetoothReceiver : BroadcastReceiver() {
     val mapData = MainActivity.mapData
-    val DEVICE_NAME = "HC-06"
+    val DEVICE_NAME = "Umbrella"
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val device: BluetoothDevice? = intent!!.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
