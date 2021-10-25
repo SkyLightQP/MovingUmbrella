@@ -11,11 +11,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import me.daegyeo.movingumbrella.data.MapData
 import me.daegyeo.movingumbrella.runtimePermission.Permission
 import java.io.IOException
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var mMapView: MapView
     private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var shardPreferences: SharedPreferences
 
     companion object {
         var mapData: MapData = MapData(null, Pair(0.0, 0.0))
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val toolbar = findViewById<Toolbar>(R.id.new_toolbar)
         setSupportActionBar(toolbar)
 
+        shardPreferences = getSharedPreferences(Constants.PACKAGE, MODE_PRIVATE)
         mMapView = findViewById(R.id.map)
         locationSource = FusedLocationSource(this, Constants.ACCESS_LOCATION_CODE)
         mMapView.getMapAsync(this)
@@ -83,7 +88,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             socket.connect()
         } catch (ex: IOException) {
             Log.e(Constants.TAG, ex.stackTraceToString())
-            Toast.makeText(this, "${deviceName}에 연결을 할 수 없습니다.\n다시 시도해주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "${deviceName}에 연결을 할 수 없습니다.\n다시 시도해주세요.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -98,6 +104,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         naverMap.addOnLocationChangeListener {
             mapData.lastLocation = Pair(it.latitude, it.longitude)
+
+            val saveLocation = shardPreferences.getString(Constants.LOCATION_KEY, null)
+            if (saveLocation != null) {
+                val token = saveLocation.split(':')
+                val lat = token[0].toDouble()
+                val lon = token[1].toDouble()
+                Marker().apply {
+                    position = LatLng(lat, lon)
+                    captionText = "최근 우산 위치"
+                    icon = MarkerIcons.YELLOW
+                    map = mapData.naverMap
+                }
+            }
         }
     }
 
