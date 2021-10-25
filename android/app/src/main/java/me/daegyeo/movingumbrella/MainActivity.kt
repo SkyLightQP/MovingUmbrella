@@ -16,8 +16,12 @@ import me.daegyeo.movingumbrella.runtimePermission.Permission
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private val ACCESS_LOCATION_CODE = 1000
     private lateinit var locationSource: FusedLocationSource
-    private lateinit var mNaverMap: NaverMap
     private lateinit var mMapView: MapView
+
+    companion object {
+        var lastLocation: Pair<Double, Double> = Pair(0.0, 0.0)
+        lateinit var mNaverMap: NaverMap
+    }
 
     private val fineLocation = Permission(this, Manifest.permission.ACCESS_FINE_LOCATION)
     private val coarseLocation = Permission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -54,6 +58,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mNaverMap = naverMap
         naverMap.locationSource = locationSource
         if (fineLocation.isGrant() && coarseLocation.isGrant()) tracking()
+
+        naverMap.addOnLocationChangeListener {
+            lastLocation = Pair(it.latitude, it.longitude)
+        }
     }
 
     override fun onRequestPermissionsResult(
