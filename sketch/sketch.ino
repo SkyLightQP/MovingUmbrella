@@ -4,14 +4,16 @@
 #define VIB_SIZE 8
 #define SERVO_SIZE 2
 
-#define MAX_MOTOR 60
-#define MIN_MOTOR 0
-#define DEFAULT_MOTOR 26
+#define MAX_MOTOR 40
+#define MIN_MOTOR 26
+#define DEFAULT_MOTOR 33
 
 int vib_pins[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 int servo_pins[] = { 10, 11 };
 int bt_tx = 13;
 int bt_rx = 12;
+char now_direction;
+
 Servo servos[SERVO_SIZE];
 SoftwareSerial bt_serial(bt_tx, bt_rx);
 
@@ -20,23 +22,30 @@ void setup() {
 
   Serial.begin(9600);
   bt_serial.begin(9600);
-  
   move_servo(0, 180);
   move_servo(1, DEFAULT_MOTOR);
+
+  now_direction = 'a';
 }
 
 void loop() {
   Serial.println();
-  long a = (get_vib(0) + get_vib(1)) / 2;
-  long b = (get_vib(2) + get_vib(3)) / 2;
-  long c = (get_vib(4) + get_vib(5)) / 2;
-  long d = (get_vib(6) + get_vib(7)) / 2;
-  delay(30);
+  long a = (get_vib(0) + get_vib(1));
+  long b = (get_vib(2) + get_vib(3));
+  long c = (get_vib(4) + get_vib(5));
+  long d = (get_vib(6) + get_vib(7));
+  
   Serial.println(a);
   Serial.println(b);
   Serial.println(c);
   Serial.println(d);
 
+  if ( a+b+c+d == 0 ) {
+    move_servo(0, 180);
+    move_servo(1, DEFAULT_MOTOR);
+  } else if(now_direction == 'a') a_change_direction(a, b, c, d);
+    else if(now_direction == 'b') b_change_direction(a, b, c, d);
+  delay(5000);
 }
 
 void init_sensors() {
@@ -54,6 +63,49 @@ long get_vib(int n) {
   if (result > 0) return result;
   return 0;
 }
+
+void a_change_direction (int a, int b, int c, int d){
+  if (a > b && a > c && a > d ){
+    move_servo(0, 180);
+    move_servo(1, MAX_MOTOR);
+    now_direction = 'a';
+  }else if ( b > a && b > c && b > d ){
+    move_servo(0, 90);
+    move_servo(1, MIN_MOTOR);
+    now_direction = 'b';
+  }else if ( c > a && c > b && c > d ){
+    move_servo(0, 180);
+    move_servo(1, MIN_MOTOR);
+    now_direction = 'a';
+  }else {
+    //( d > a && d > b && d > c )
+    move_servo(0, 90);
+    move_servo(1, MAX_MOTOR);
+    now_direction = 'b';
+  }
+}
+
+void b_change_direction (int a, int b, int c, int d){
+  if (a > b && a > c && a > d ){
+    move_servo(0, 90);
+    move_servo(1, MAX_MOTOR);
+    now_direction = 'b';
+  }else if ( b > a && b > c && b > d ){
+    move_servo(0, 180);
+    move_servo(1, MAX_MOTOR);
+    now_direction = 'a';
+  }else if ( c > a && c > b && c > d ){
+    move_servo(0, 90);
+    move_servo(1, MIN_MOTOR);
+    now_direction = 'b';
+  }else{
+    //( d > a && d > b && d > c )
+    move_servo(0, 180);
+    move_servo(1, MIN_MOTOR);
+    now_direction = 'a';
+  }
+}
+
 
 void move_servo(int n, int angle) {
   if (n == 1) {
