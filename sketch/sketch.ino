@@ -1,10 +1,12 @@
 #include <Servo.h> 
 #include <SoftwareSerial.h>
 
+#define DEBUG true
+
 #define VIB_SIZE 8
 #define SERVO_SIZE 2
 
-#define MAX_MOTOR 40
+#define MAX_MOTOR 38
 #define MIN_MOTOR 25
 #define DEFAULT_MOTOR 30
 
@@ -29,7 +31,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println();
   long a = (get_vib(0) + get_vib(1));
   long b = (get_vib(2) + get_vib(3));
   long c = (get_vib(4) + get_vib(5));
@@ -38,28 +39,31 @@ void loop() {
   long front = a + b;
   long back = c + d;
   
-  Serial.println(a);
-  Serial.println(b);
-  Serial.println(c);
-  Serial.println(d);
+  if (DEBUG == true) {
+    Serial.println();
+    Serial.println(a);
+    Serial.println(b);
+    Serial.println(c);
+    Serial.println(d);
+  }
+  
+  if (a <= 30 || b <= 30 || c <= 30 || d <= 30) {
+    return; 
+  }
 
   if (front == 0 && back == 0) {
-    move_servo(0, 180);
     move_servo(1, DEFAULT_MOTOR);
   }
 
   if (front == back) {
-    move_servo(0, 180);
     move_servo(1, DEFAULT_MOTOR);
   }
 
   if (front > back) {
-    move_servo(0, 180);
     move_servo(1, MAX_MOTOR);
   }
 
   if (front < back) {
-    move_servo(0, 180);
     move_servo(1, MIN_MOTOR);
   }
 
