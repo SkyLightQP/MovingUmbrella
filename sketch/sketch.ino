@@ -5,8 +5,8 @@
 #define SERVO_SIZE 2
 
 #define MAX_MOTOR 40
-#define MIN_MOTOR 26
-#define DEFAULT_MOTOR 33
+#define MIN_MOTOR 25
+#define DEFAULT_MOTOR 30
 
 int vib_pins[] = { 2, 3, 4, 5, 6, 7, 8, 9 };
 int servo_pins[] = { 10, 11 };
@@ -34,18 +34,42 @@ void loop() {
   long b = (get_vib(2) + get_vib(3));
   long c = (get_vib(4) + get_vib(5));
   long d = (get_vib(6) + get_vib(7));
+
+  long front = a + b;
+  long back = c + d;
   
   Serial.println(a);
   Serial.println(b);
   Serial.println(c);
   Serial.println(d);
 
-  if ( a+b+c+d == 0 ) {
+  if (front == 0 && back == 0) {
     move_servo(0, 180);
     move_servo(1, DEFAULT_MOTOR);
-  } else if(now_direction == 'a') a_change_direction(a, b, c, d);
-    else if(now_direction == 'b') b_change_direction(a, b, c, d);
-  delay(5000);
+  }
+
+  if (front == back) {
+    move_servo(0, 180);
+    move_servo(1, DEFAULT_MOTOR);
+  }
+
+  if (front > back) {
+    move_servo(0, 180);
+    move_servo(1, MAX_MOTOR);
+  }
+
+  if (front < back) {
+    move_servo(0, 180);
+    move_servo(1, MIN_MOTOR);
+  }
+
+//  if ( a+b+c+d == 0 ) {
+//    move_servo(0, 180);
+//    move_servo(1, DEFAULT_MOTOR);
+//    now_direction = 'a';
+//  } else if(now_direction == 'a') a_change_direction(a, b, c, d);
+//    else if(now_direction == 'b') b_change_direction(a, b, c, d);
+  delay(3000);
 }
 
 void init_sensors() {
